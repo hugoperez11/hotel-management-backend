@@ -1,60 +1,48 @@
 package dev.hugo.hotel_management_backend.controller;
 
-
 import dev.hugo.hotel_management_backend.model.Room;
 import dev.hugo.hotel_management_backend.service.RoomService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "*") 
 @RestController
-@RequestMapping("/api/room")
+@RequestMapping("/api/v1/rooms")
+@CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "*")
 public class RoomController {
 
-    @Autowired
-    private RoomService roomService;
+    private final RoomService roomService;
 
-    
+    public RoomController(RoomService roomService) {
+        this.roomService = roomService;
+    }
+
+@GetMapping("/available")
+public List<Room> getAvailableRooms(@RequestParam("checkInDate") String checkInDate,
+                                     @RequestParam("checkOutDate") String checkOutDate) {
+    try {
+        LocalDate checkIn = LocalDate.parse(checkInDate.trim());
+        LocalDate checkOut = LocalDate.parse(checkOutDate.trim());
+        return roomService.getAvailableRooms(checkIn, checkOut);
+    } catch (DateTimeParseException e) {
+        // Manejo de error, puedes lanzar una excepción o devolver un mensaje de error
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Formato de fecha inválido");
+    }
+}
+
+
     @GetMapping
     public List<Room> getAllRooms() {
         return roomService.getAllRooms();
     }
 
-    
     @GetMapping("/{id}")
-    public ResponseEntity<Room> getRoomById(@PathVariable Long id) {
-        Room room = roomService.getRoomById(id);
-        if (room != null) {
-            return ResponseEntity.ok(room);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    
-    @PostMapping
-    public Room createRoom(@RequestBody Room room) {
-        return roomService.saveRoom(room);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Room> updateRoom(@PathVariable Long id, @RequestBody Room roomDetails) {
-        Room updatedRoom = roomService.updateRoom(id, roomDetails);
-        if (updatedRoom != null) {
-            return ResponseEntity.ok(updatedRoom);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteRoom(@PathVariable Long id) {
-        roomService.deleteRoom(id);
-        return ResponseEntity.noContent().build();
+    public Room getRoomById(@PathVariable Long id) {
+        return roomService.getRoomById(id);
     }
 }
-
