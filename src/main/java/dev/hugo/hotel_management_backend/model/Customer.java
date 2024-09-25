@@ -13,10 +13,8 @@ public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
-
-    // Otros campos, si es necesario
-    private String email; // Ejemplo de campo adicional
+    private String name;   
+    private String email; 
 
     // Getters y setters
     public Long getId() {

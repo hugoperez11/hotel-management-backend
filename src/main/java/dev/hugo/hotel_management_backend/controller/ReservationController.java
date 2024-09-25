@@ -3,7 +3,7 @@ package dev.hugo.hotel_management_backend.controller;
 import dev.hugo.hotel_management_backend.model.Reservation;
 import dev.hugo.hotel_management_backend.service.ReservationService;
 import org.springframework.web.bind.annotation.*;
-
+import dev.hugo.hotel_management_backend.dto.ReservationDto; // Asegúrate de importar ReservationDto
 import java.util.List;
 
 @RestController
@@ -18,8 +18,8 @@ public class ReservationController {
     }
 
     @PostMapping
-    public Reservation createReservation(@RequestBody Reservation reservation) {
-        return reservationService.createReservation(reservation);
+    public Reservation createReservation(@RequestBody ReservationDto reservationDto) { // Cambiado a ReservationDto
+        return reservationService.createReservation(reservationDto); // Usa reservationDto
     }
 
     @GetMapping("/{roomId}")
@@ -32,3 +32,4 @@ public class ReservationController {
         return reservationService.getAllReservations();
     }
 }
+
