@@ -1,13 +1,12 @@
 package dev.hugo.hotel_management_backend.service;
 
 import dev.hugo.hotel_management_backend.model.Reservation;
-
-import dev.hugo.hotel_management_backend.model.Room; // Asegúrate de importar la clase Room
+import dev.hugo.hotel_management_backend.model.Room;
 import dev.hugo.hotel_management_backend.dto.ReservationDto;
-import dev.hugo.hotel_management_backend.model.Customer; // Asegúrate de importar la clase Customer
+import dev.hugo.hotel_management_backend.model.Customer;
 import dev.hugo.hotel_management_backend.repository.ReservationRepository;
-import dev.hugo.hotel_management_backend.repository.RoomRepository; // Importa RoomRepository
-import dev.hugo.hotel_management_backend.repository.CustomerRepository; // Importa CustomerRepository
+import dev.hugo.hotel_management_backend.repository.RoomRepository;
+import dev.hugo.hotel_management_backend.repository.CustomerRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -20,14 +19,14 @@ import java.util.List;
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
-    private final RoomRepository roomRepository; // Declara RoomRepository
-    private final CustomerRepository customerRepository; // Declara CustomerRepository
+    private final RoomRepository roomRepository;
+    private final CustomerRepository customerRepository;
 
     // Constructor
     public ReservationService(ReservationRepository reservationRepository, RoomRepository roomRepository, CustomerRepository customerRepository) {
         this.reservationRepository = reservationRepository;
-        this.roomRepository = roomRepository; // Inicializa RoomRepository
-        this.customerRepository = customerRepository; // Inicializa CustomerRepository
+        this.roomRepository = roomRepository;
+        this.customerRepository = customerRepository;
     }
 
     // Método para crear una reserva
@@ -41,7 +40,10 @@ public class ReservationService {
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "El cliente no existe."));
 
         // Verificar si la habitación puede ser reservada
-        if (!canReserveRoom(room.getId(), reservationDto.getCheckInDate(), reservationDto.getCheckOutDate())) {
+        LocalDate checkInDate = LocalDate.parse(reservationDto.getCheckInDate());
+        LocalDate checkOutDate = LocalDate.parse(reservationDto.getCheckOutDate());
+
+        if (!canReserveRoom(room.getId(), checkInDate, checkOutDate)) {
             throw new IllegalArgumentException("La habitación no está disponible en esas fechas.");
         }
 
@@ -49,8 +51,8 @@ public class ReservationService {
         Reservation reservation = new Reservation();
         reservation.setRoom(room);
         reservation.setCustomer(customer);
-        reservation.setCheckInDate(reservationDto.getCheckInDate());
-        reservation.setCheckOutDate(reservationDto.getCheckOutDate());
+        reservation.setCheckInDate(checkInDate);
+        reservation.setCheckOutDate(checkOutDate);
 
         return reservationRepository.save(reservation); // Guardar la reserva
     }
@@ -67,6 +69,7 @@ public class ReservationService {
 
     // Método para verificar si una habitación puede ser reservada
     public boolean canReserveRoom(Long roomId, LocalDate checkInDate, LocalDate checkOutDate) {
+        // Verificar si hay reservas que se solapen con las fechas solicitadas
         return reservationRepository.countByRoom_IdAndCheckInDateLessThanAndCheckOutDateGreaterThan(
             roomId, checkOutDate, checkInDate) == 0;
     }
