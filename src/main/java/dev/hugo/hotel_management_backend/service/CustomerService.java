@@ -1,9 +1,12 @@
 package dev.hugo.hotel_management_backend.service;
 
 import dev.hugo.hotel_management_backend.model.Customer;
-import dev.hugo.hotel_management_backend.dto.CustomerDto;
 import dev.hugo.hotel_management_backend.repository.CustomerRepository;
+import dev.hugo.hotel_management_backend.dto.CustomerDto;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CustomerService {
@@ -14,20 +17,39 @@ public class CustomerService {
         this.customerRepository = customerRepository;
     }
 
-    // Método para buscar o crear un cliente
     public Customer createOrFindCustomer(CustomerDto customerDto) {
-        // Buscamos al cliente por su correo
-        Customer existingCustomer = customerRepository.findByEmail(customerDto.getEmail());
-        if (existingCustomer != null) {
-            return existingCustomer; // Si existe, lo devolvemos
+        // Intentamos encontrar un cliente por nombre y correo electrónico
+        Optional<Customer> existingCustomer = customerRepository.findByNameAndEmail(
+            customerDto.getName(), customerDto.getEmail()
+        );
+
+        // Si el cliente ya existe, lo devolvemos
+        if (existingCustomer.isPresent()) {
+            return existingCustomer.get();
         }
 
-        // Si no existe, lo creamos
+        // Si no existe, creamos uno nuevo
         Customer newCustomer = new Customer();
         newCustomer.setName(customerDto.getName());
         newCustomer.setEmail(customerDto.getEmail());
 
-        return customerRepository.save(newCustomer); // Guardamos el nuevo cliente
+        return customerRepository.save(newCustomer);
+    }
+
+    public Customer getCustomerById(Long id) {
+        return customerRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Customer not found"));
+    }
+
+    public List<Customer> getAllCustomers() {
+        return customerRepository.findAll();
+    }
+
+    public boolean deleteCustomer(Long id) {
+        Optional<Customer> customer = customerRepository.findById(id);
+        if (customer.isPresent()) {
+            customerRepository.delete(customer.get());
+            return true;
+        }
+        return false;
     }
 }
-
