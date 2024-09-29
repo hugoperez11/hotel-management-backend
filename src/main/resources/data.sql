@@ -1,26 +1,37 @@
--- Habitaciones superiores
-INSERT INTO rooms (id, name, type, view, bed, price, image, description)
-VALUES 
-(1, 'Superior Room', 'Superior', 'Garden View', 'King Bed', 120, 'superior_garden_king.jpg', 'Habitación superior con vista al jardín y cama King.'),
-(2, 'Superior Room', 'Superior', 'Garden View', 'Two Beds', 140, 'superior_garden_2beds.jpg', 'Habitación superior con vista al jardín y dos camas.');
+ALTER TABLE rooms
+ALTER COLUMN description SET DATA TYPE TEXT;
 
--- Habitaciones Deluxe
+-- Superior Rooms
 INSERT INTO rooms (id, name, type, view, bed, price, image, description)
 VALUES 
-(3, 'Deluxe Room', 'Deluxe', 'Pool View', 'King Bed', 180, 'deluxe_pool_king.jpg', 'Habitación deluxe con vista a la piscina y cama King.'),
-(4, 'Deluxe Room', 'Deluxe', 'Pool View', 'Two Beds', 200, 'deluxe_pool_2beds.jpg', 'Habitación deluxe con vista a la piscina y dos camas.');
+(1, 'Superior Room', 'Superior', 'Garden View', 'King Bed', 120, '/img/SuperiorRoom.webp', 
+'Superior room of 32m²/344ft² with garden view and King bed. Features: pillow-top mattress, down mattress, comforter. Bathroom features: marble bathroom, shower, double vanity, makeup mirror with lighting, hairdryer. Air-conditioned, it is a non-smoking room. Includes robe and slippers.'),
+(2, 'Superior Room', 'Superior', 'Garden View', 'Two Beds', 140, '/img/SuperiorRoom2beds.webp', 
+'Superior room of 32m²/344ft² with garden view and two beds. Features: pillow-top mattress, down mattress, comforter. Bathroom features: marble bathroom, shower, double vanity, makeup mirror with lighting, hairdryer. Air-conditioned, it is a non-smoking room. Includes robe and slippers.');
+
+-- Deluxe Rooms
+INSERT INTO rooms (id, name, type, view, bed, price, image, description)
+VALUES 
+(3, 'Deluxe Room', 'Deluxe', 'Pool View', 'King Bed', 180, '/img/DeluxeRoom.jpg', 
+'Deluxe room of 32m²/344ft² with pool view and King bed. Features: pillow-top mattress, down mattress, comforter. Bathroom features: marble bathroom, shower, double vanity, makeup mirror with lighting, hairdryer. Air-conditioned, it is a non-smoking room. Includes robe and slippers.'),
+(4, 'Deluxe Room', 'Deluxe', 'Pool View', 'Two Beds', 200, '/img/deluxe2camas.webp', 
+'Deluxe room of 32m²/344ft² with pool view and two beds. Features: pillow-top mattress, down mattress, comforter. Bathroom features: marble bathroom, shower, double vanity, makeup mirror with lighting, hairdryer. Air-conditioned, it is a non-smoking room. Includes robe and slippers.');
 
 -- Junior Suites
 INSERT INTO rooms (id, name, type, view, bed, price, image, description)
 VALUES 
-(5, 'Junior Suite', 'Junior Suite', 'Ocean View', 'King Bed', 250, 'junior_suite_ocean_king.jpg', 'Junior suite con vista al océano y cama King.'),
-(6, 'Junior Suite', 'Junior Suite', 'Ocean View', 'Two Beds', 270, 'junior_suite_ocean_2beds.jpg', 'Junior suite con vista al océano y dos camas.');
+(5, 'Junior Suite', 'Junior Suite', 'Ocean View', 'King Bed', 250, '/img/JuniorSuite.jpg', 
+'Junior suite of 40m²/430ft² with ocean view and King bed. Features: pillow-top mattress, down mattress, comforter. Bathroom features: marble bathroom, shower, double vanity, makeup mirror with lighting, hairdryer. Air-conditioned, it is a non-smoking room. Includes robe and slippers.'),
+(6, 'Junior Suite', 'Junior Suite', 'Ocean View', 'Two Beds', 270, '/img/JuniorSuite2beds.webp', 
+'Junior suite of 40m²/430ft² with ocean view and two beds. Features: pillow-top mattress, down mattress, comforter. Bathroom features: marble bathroom, shower, double vanity, makeup mirror with lighting, hairdryer. Air-conditioned, it is a non-smoking room. Includes robe and slippers.');
 
 -- Suites
 INSERT INTO rooms (id, name, type, view, bed, price, image, description)
 VALUES 
-(7, 'Suite', 'Suite', 'Ocean View', 'King Bed', 350, 'suite_ocean_king.jpg', 'Suite con vista al océano y cama King.'),
-(8, 'Suite', 'Suite', 'Ocean View', 'Two Beds', 370, 'suite_ocean_2beds.jpg', 'Suite con vista al océano y dos camas.');
+(7, 'Suite', 'Suite', 'Ocean View', 'King Bed', 350, '/img/Suite.jpg', 
+'Suite of 60m²/702ft² with ocean view and King bed. Features: pillow-top mattress, down mattress, comforter. Bathroom features: marble bathroom, shower, double vanity, makeup mirror with lighting, hairdryer. Air-conditioned, it is a non-smoking room. Includes robe and slippers.'),
+(8, 'Suite', 'Suite', 'Ocean View', 'Two Beds', 370, '/img/Suite2beds.webp', 
+'Suite of 60m²/702ft² with ocean view and two beds. Features: pillow-top mattress, down mattress, comforter. Bathroom features: marble bathroom, shower, double vanity, makeup mirror with lighting, hairdryer. Air-conditioned, it is a non-smoking room. Includes robe and slippers.');
 
 
 -- Inserción de datos en la tabla reservations
