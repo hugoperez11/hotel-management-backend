@@ -1,3 +1,7 @@
+INSERT INTO roles (id_role, name) VALUES (default, 'ROLE_ADMIN');
+INSERT INTO users (id_user, username, password) VALUES (default, 'pepa', '$2a$12$fw8qjZwWYhvR.xzLUN5LuejC03NqCFuJQYwnstpBWki.Yi4L64MkW');
+INSERT INTO roles_users (role_id, user_id) VALUES (1, 1);
+
 ALTER TABLE rooms
 ALTER COLUMN description SET DATA TYPE TEXT;
 
