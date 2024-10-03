@@ -1,29 +1,24 @@
 package dev.hugo.hotel_management_backend.dto;
 
 public class ReservationDto {
-    
     private Long roomId;
-    private Long customerId; // Este puede ser opcional si el cliente es nuevo
     private String checkInDate;
     private String checkOutDate;
-    private String customerName;  // Añadir campo para el nombre del cliente
-    private String customerEmail; // Añadir campo para el email del cliente
+    private Long customerId;
+    private String customerName;
+    private String customerEmail;
+    private String confirmationNumber;
+    private String creditCard; // New field
+    private String dni; // New field
 
-    // Getters y setters
+    // Getters and Setters
+
     public Long getRoomId() {
         return roomId;
     }
 
     public void setRoomId(Long roomId) {
         this.roomId = roomId;
-    }
-
-    public Long getCustomerId() {
-        return customerId;
-    }
-
-    public void setCustomerId(Long customerId) {
-        this.customerId = customerId;
     }
 
     public String getCheckInDate() {
@@ -42,7 +37,14 @@ public class ReservationDto {
         this.checkOutDate = checkOutDate;
     }
 
-    // Getters y setters para customerName y customerEmail
+    public Long getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
+    }
+
     public String getCustomerName() {
         return customerName;
     }
@@ -57,5 +59,29 @@ public class ReservationDto {
 
     public void setCustomerEmail(String customerEmail) {
         this.customerEmail = customerEmail;
+    }
+
+    public String getConfirmationNumber() {
+        return confirmationNumber;
+    }
+
+    public void setConfirmationNumber(String confirmationNumber) {
+        this.confirmationNumber = confirmationNumber;
+    }
+
+    public String getCreditCard() {
+        return creditCard;
+    }
+
+    public void setCreditCard(String creditCard) {
+        this.creditCard = creditCard;
+    }
+
+    public String getDni() {
+        return dni;
+    }
+
+    public void setDni(String dni) {
+        this.dni = dni;
     }
 }

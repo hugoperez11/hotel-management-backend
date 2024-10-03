@@ -1,5 +1,6 @@
 package dev.hugo.hotel_management_backend.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -29,7 +30,11 @@ public class Reservation {
     private LocalDate checkInDate;
     private LocalDate checkOutDate;
 
+    @Column(unique = true, nullable = false)
+    private String confirmationNumber;
+
     // Getters y setters
+
     public Long getId() {
         return id;
     }
@@ -47,7 +52,7 @@ public class Reservation {
     }
 
     public Long getRoomId() { // Método añadido para obtener el ID de la habitación
-        return room != null ? room.getId() : null; // Asegúrate de que Room tenga un método getId()
+        return room != null ? room.getId() : null;
     }
 
     public Customer getCustomer() {
@@ -72,5 +77,13 @@ public class Reservation {
 
     public void setCheckOutDate(LocalDate checkOutDate) {
         this.checkOutDate = checkOutDate;
+    }
+
+    public String getConfirmationNumber() {
+        return confirmationNumber;
+    }
+
+    public void setConfirmationNumber(String confirmationNumber) {
+        this.confirmationNumber = confirmationNumber;
     }
 }

@@ -40,6 +40,10 @@ public class CustomerService {
         return customerRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Customer not found"));
     }
 
+    public Optional<Customer> findCustomerById(Long id) {
+        return customerRepository.findById(id);
+    }
+
     public List<Customer> getAllCustomers() {
         return customerRepository.findAll();
     }

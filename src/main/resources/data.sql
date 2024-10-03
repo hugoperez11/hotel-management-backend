@@ -44,11 +44,12 @@ VALUES
 INSERT INTO customers (name, email) VALUES ('John Doe', 'john@example.com');
 INSERT INTO customers (name, email) VALUES ('Jane Smith', 'jane@example.com');
 
-INSERT INTO reservations (check_in_date, check_out_date, room_id, customer_id) VALUES 
-('2024-10-01', '2024-10-05', 1, 1),
-('2024-10-10', '2024-10-15', 2, 1), 
-('2024-10-20', '2024-10-25', 1, 2), 
-('2024-11-01', '2024-11-03', 3, 2);
+INSERT INTO reservations (check_in_date, check_out_date, room_id, customer_id, confirmation_number) VALUES 
+('2024-10-01', '2024-10-05', 1, 1, 'C123456'),
+('2024-10-10', '2024-10-15', 2, 1, 'C654321'), 
+('2024-10-20', '2024-10-25', 1, 2, 'C987654'), 
+('2024-11-01', '2024-11-03', 3, 2, 'C234567');
+
 
 
 
