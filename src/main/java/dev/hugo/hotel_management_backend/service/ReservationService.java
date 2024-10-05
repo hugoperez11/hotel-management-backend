@@ -7,12 +7,14 @@ import dev.hugo.hotel_management_backend.repository.ReservationRepository;
 import dev.hugo.hotel_management_backend.repository.RoomRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Optional;
 
 @Service
 public class ReservationService {
@@ -21,53 +23,68 @@ public class ReservationService {
     private final RoomRepository roomRepository;
     private final Random random = new Random();
 
-    // Constructor
     public ReservationService(ReservationRepository reservationRepository, RoomRepository roomRepository) {
         this.reservationRepository = reservationRepository;
         this.roomRepository = roomRepository;
     }
 
-    // Método para crear una reserva
     public Reservation createReservation(Long roomId, LocalDate checkInDate, LocalDate checkOutDate, Customer customer) {
-        // Obtener la habitación
         Room room = roomRepository.findById(roomId)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "La habitación no existe."));
-
-        // Verificar si la habitación puede ser reservada
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "La habitación no existe."));
         if (!canReserveRoom(room.getId(), checkInDate, checkOutDate)) {
             throw new IllegalArgumentException("La habitación no está disponible en esas fechas.");
         }
-
-        // Crear una nueva reserva y asignar la habitación y el cliente
         Reservation reservation = new Reservation();
         reservation.setRoom(room);
         reservation.setCustomer(customer);
         reservation.setCheckInDate(checkInDate);
         reservation.setCheckOutDate(checkOutDate);
-
-        // Generar y asignar el número de confirmación
         String confirmationNumber = generateUniqueConfirmationNumber();
         reservation.setConfirmationNumber(confirmationNumber);
-
-        // Guardar y retornar la reserva
         return reservationRepository.save(reservation);
     }
 
-    // Método para generar un número de confirmación único de 6 dígitos
+    @Transactional
+    public Reservation updateReservationByConfirmationNumber(String confirmationNumber, Long newRoomId, LocalDate newCheckInDate, LocalDate newCheckOutDate, Customer newCustomer) {
+        Reservation existingReservation = reservationRepository.findByConfirmationNumber(confirmationNumber)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "La reserva con el número de confirmación proporcionado no existe."));
+        Room newRoom = roomRepository.findById(newRoomId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "La habitación no existe."));
+        if (!canReserveRoom(newRoom.getId(), newCheckInDate, newCheckOutDate, existingReservation.getId())) {
+            throw new IllegalArgumentException("La habitación no está disponible en esas fechas.");
+        }
+        existingReservation.setRoom(newRoom);
+        existingReservation.setCheckInDate(newCheckInDate);
+        existingReservation.setCheckOutDate(newCheckOutDate);
+        existingReservation.setCustomer(newCustomer);
+        return reservationRepository.save(existingReservation);
+    }
+
+        // Método para eliminar una reserva por número de confirmación
+        public boolean deleteReservationByConfirmationNumber(String confirmationNumber) {
+            Optional<Reservation> reservation = reservationRepository.findByConfirmationNumber(confirmationNumber);
+    
+            if (reservation.isPresent()) {
+                reservationRepository.delete(reservation.get());
+                return true;
+            } else {
+                return false;
+            }
+        }
+
     private String generateUniqueConfirmationNumber() {
         String confirmationNumber;
         int attempts = 0;
         do {
             confirmationNumber = String.format("C%06d", random.nextInt(1_000_000));
             attempts++;
-            if (attempts > 10) { // Limitar los intentos para evitar un ciclo infinito
+            if (attempts > 10) {
                 throw new IllegalStateException("No se pudo generar un número de confirmación único después de 10 intentos.");
             }
         } while (reservationRepository.existsByConfirmationNumber(confirmationNumber));
         return confirmationNumber;
     }
 
-    // Métodos existentes
     public List<Reservation> getReservationsByRoom(Long roomId) {
         return reservationRepository.findByRoom_Id(roomId);
     }
@@ -77,23 +94,28 @@ public class ReservationService {
     }
 
     public boolean canReserveRoom(Long roomId, LocalDate checkInDate, LocalDate checkOutDate) {
-        // Verificar si hay reservas que se solapen con las fechas solicitadas
         return reservationRepository.countByRoom_IdAndCheckInDateLessThanAndCheckOutDateGreaterThan(
-            roomId, checkOutDate, checkInDate) == 0;
+                roomId, checkOutDate, checkInDate) == 0;
+    }
+
+    public boolean canReserveRoom(Long roomId, LocalDate checkInDate, LocalDate checkOutDate, Long reservationIdToExclude) {
+        return reservationRepository.countByRoom_IdAndCheckInDateLessThanAndCheckOutDateGreaterThanAndIdNot(
+                roomId, checkOutDate, checkInDate, reservationIdToExclude) == 0;
     }
 
     public List<Room> getAvailableRooms(LocalDate checkInDate, LocalDate checkOutDate) {
-        List<Room> allRooms = roomRepository.findAll(); // Obtener todas las habitaciones
+        List<Room> allRooms = roomRepository.findAll();
         List<Room> availableRooms = new ArrayList<>();
-
-        // Verificar disponibilidad de cada habitación
         for (Room room : allRooms) {
             boolean isAvailable = canReserveRoom(room.getId(), checkInDate, checkOutDate);
             if (isAvailable) {
                 availableRooms.add(room);
             }
         }
-
         return availableRooms;
+    }
+
+    public Optional<Reservation> findByConfirmationNumber(String confirmationNumber) {
+        return reservationRepository.findByConfirmationNumber(confirmationNumber);
     }
 }

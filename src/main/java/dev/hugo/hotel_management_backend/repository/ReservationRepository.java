@@ -6,17 +6,19 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
-    
-    // Método para contar reservas que se superponen en las fechas
-    long countByRoom_IdAndCheckInDateLessThanAndCheckOutDateGreaterThan(
-        Long roomId, LocalDate checkOutDate, LocalDate checkInDate);    
-    
-    // Método para obtener todas las reservas de una habitación
     List<Reservation> findByRoom_Id(Long roomId);
 
-     // Nuevo método para verificar la existencia de un número de confirmación
-     boolean existsByConfirmationNumber(String confirmationNumber);
+    boolean existsByConfirmationNumber(String confirmationNumber);
+
+    long countByRoom_IdAndCheckInDateLessThanAndCheckOutDateGreaterThan(Long roomId, LocalDate checkOutDate, LocalDate checkInDate);
+
+    // Nuevo método para contar excluyendo una reserva específica
+    long countByRoom_IdAndCheckInDateLessThanAndCheckOutDateGreaterThanAndIdNot(Long roomId, LocalDate checkOutDate, LocalDate checkInDate, Long id);
+
+    // Nuevo método para buscar por número de confirmación
+    Optional<Reservation> findByConfirmationNumber(String confirmationNumber);
 }

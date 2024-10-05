@@ -48,9 +48,11 @@ public class SecurityConfig {
             .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
             .requestMatchers("/img/**").permitAll()
             .requestMatchers(HttpMethod.GET, endpoint + "/rooms/**").permitAll()
-            .requestMatchers(HttpMethod.POST, endpoint + "/reservations/**").permitAll()
-            
+            .requestMatchers(HttpMethod.POST, endpoint + "/reservations/**").permitAll()            
             .requestMatchers(HttpMethod.GET, endpoint + "/login").hasAnyRole("ADMIN")
+            .requestMatchers(HttpMethod.GET, endpoint + "/reservations/confirmation/**").permitAll() 
+            .requestMatchers(HttpMethod.PUT, endpoint + "/reservations/confirmation/**").permitAll() 
+            .requestMatchers(HttpMethod.DELETE, endpoint + "/reservations/confirmation/**").permitAll() 
            
 
             .anyRequest().authenticated())

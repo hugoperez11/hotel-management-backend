@@ -1,17 +1,18 @@
 package dev.hugo.hotel_management_backend.dto;
 
 public class ReservationDto {
+
     private Long roomId;
     private String checkInDate;
     private String checkOutDate;
     private Long customerId;
-    private String customerName;
-    private String customerEmail;
-    private String confirmationNumber;
-    private String creditCard; // New field
-    private String dni; // New field
+    private String customerName; // Para crear o actualizar el nombre del cliente
+    private String customerEmail; // Para crear o actualizar el email del cliente
+    private String confirmationNumber; // Solo para lectura
 
-    // Getters and Setters
+    // Getters y Setters
+
+ 
 
     public Long getRoomId() {
         return roomId;
@@ -67,21 +68,5 @@ public class ReservationDto {
 
     public void setConfirmationNumber(String confirmationNumber) {
         this.confirmationNumber = confirmationNumber;
-    }
-
-    public String getCreditCard() {
-        return creditCard;
-    }
-
-    public void setCreditCard(String creditCard) {
-        this.creditCard = creditCard;
-    }
-
-    public String getDni() {
-        return dni;
-    }
-
-    public void setDni(String dni) {
-        this.dni = dni;
     }
 }
