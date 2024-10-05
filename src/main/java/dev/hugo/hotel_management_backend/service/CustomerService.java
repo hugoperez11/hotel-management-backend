@@ -32,6 +32,7 @@ public class CustomerService {
         Customer newCustomer = new Customer();
         newCustomer.setName(customerDto.getName());
         newCustomer.setEmail(customerDto.getEmail());
+        newCustomer.setCreditCardNumber(customerDto.getCreditCardNumber());
 
         return customerRepository.save(newCustomer);
     }

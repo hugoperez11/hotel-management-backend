@@ -41,8 +41,9 @@ VALUES
 -- Inserción de datos en la tabla reservations
 
 -- Datos de ejemplo
-INSERT INTO customers (name, email) VALUES ('John Doe', 'john@example.com');
-INSERT INTO customers (name, email) VALUES ('Jane Smith', 'jane@example.com');
+INSERT INTO customers (name, email, credit_card_number) VALUES ('John Doe', 'john@example.com', '4111111111111111');
+INSERT INTO customers (name, email, credit_card_number) VALUES ('Jane Smith', 'jane@example.com', '5500 0000 0000 0004');
+
 
 INSERT INTO reservations (check_in_date, check_out_date, room_id, customer_id, confirmation_number) VALUES 
 ('2024-10-01', '2024-10-05', 1, 1, 'C123456'),

@@ -32,9 +32,6 @@ public class ReservationController {
     // Método POST existente para crear reservas
     @PostMapping
     public ReservationDto createReservation(@RequestBody ReservationDto reservationDto) {
-        // [Código existente para crear una reserva]
-        // ...
-
         // Convertir las fechas de String a LocalDate
         LocalDate checkInDate;
         LocalDate checkOutDate;
@@ -55,6 +52,7 @@ public class ReservationController {
             CustomerDto customerDto = new CustomerDto();
             customerDto.setName(reservationDto.getCustomerName());
             customerDto.setEmail(reservationDto.getCustomerEmail());
+            customerDto.setCreditCardNumber(reservationDto.getCreditCardNumber()); // Añadir tarjeta de crédito aquí
             customer = customerService.createOrFindCustomer(customerDto);
         }
 
@@ -75,6 +73,7 @@ public class ReservationController {
         responseDto.setConfirmationNumber(reservation.getConfirmationNumber());
         responseDto.setCustomerName(reservation.getCustomer().getName());
         responseDto.setCustomerEmail(reservation.getCustomer().getEmail());
+        responseDto.setCreditCardNumber(customer.getCreditCardNumber()); // Añadir tarjeta de crédito en la respuesta
 
         return responseDto;
     }
@@ -94,6 +93,7 @@ public class ReservationController {
         responseDto.setConfirmationNumber(reservation.getConfirmationNumber());
         responseDto.setCustomerName(reservation.getCustomer().getName());
         responseDto.setCustomerEmail(reservation.getCustomer().getEmail());
+        responseDto.setCreditCardNumber(reservation.getCustomer().getCreditCardNumber()); // Añadir tarjeta de crédito en la respuesta
 
         return responseDto;
     }
@@ -123,6 +123,7 @@ public class ReservationController {
             CustomerDto customerDto = new CustomerDto();
             customerDto.setName(reservationDto.getCustomerName());
             customerDto.setEmail(reservationDto.getCustomerEmail());
+            customerDto.setCreditCardNumber(reservationDto.getCreditCardNumber()); // Añadir tarjeta de crédito aquí
             customer = customerService.createOrFindCustomer(customerDto);
         }
 
@@ -144,11 +145,12 @@ public class ReservationController {
         responseDto.setConfirmationNumber(updatedReservation.getConfirmationNumber());
         responseDto.setCustomerName(updatedReservation.getCustomer().getName());
         responseDto.setCustomerEmail(updatedReservation.getCustomer().getEmail());
+        responseDto.setCreditCardNumber(customer.getCreditCardNumber()); // Añadir tarjeta de crédito en la respuesta
 
         return responseDto;
     }
 
-       // Endpoint para eliminar una reserva por número de confirmación
+    // Endpoint para eliminar una reserva por número de confirmación
     @DeleteMapping("/confirmation/{confirmationNumber}")
     public ResponseEntity<String> deleteReservation(@PathVariable String confirmationNumber) {
         boolean isDeleted = reservationService.deleteReservationByConfirmationNumber(confirmationNumber);

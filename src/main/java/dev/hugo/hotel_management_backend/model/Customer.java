@@ -14,9 +14,10 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;   
-    private String email; 
+    private String email;
+    private String creditCardNumber;    
 
-    // Getters y setters
+   
     public Long getId() {
         return id;
     }
@@ -39,6 +40,13 @@ public class Customer {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+    public String getCreditCardNumber() {
+        return creditCardNumber;
+    }
+
+    public void setCreditCardNumber(String creditCardNumber) {
+        this.creditCardNumber = creditCardNumber;
     }
 }
 
