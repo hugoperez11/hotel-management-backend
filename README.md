@@ -17,5 +17,4 @@ mvn spring-boot:run
 
 - Spring Boot
 - Postman
-- Docker
-- MySql Workbench
+- H2 Database Console
