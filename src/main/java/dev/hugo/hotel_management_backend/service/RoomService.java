@@ -1,42 +1,39 @@
 package dev.hugo.hotel_management_backend.service;
 
 import dev.hugo.hotel_management_backend.model.Room;
+import dev.hugo.hotel_management_backend.repository.ReservationRepository;
 import dev.hugo.hotel_management_backend.repository.RoomRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class RoomService {
+    private final RoomRepository roomRepository;
+    private final ReservationRepository reservationRepository;
 
-    @Autowired
-    private RoomRepository roomRepository;
+    public RoomService(RoomRepository roomRepository, ReservationRepository reservationRepository) {
+        this.roomRepository = roomRepository;
+        this.reservationRepository = reservationRepository;
+    }
 
     public List<Room> getAllRooms() {
         return roomRepository.findAll();
     }
 
     public Room getRoomById(Long id) {
-        return roomRepository.findById(id).orElse(null);
+        return roomRepository.findById(id).orElseThrow();
     }
 
-    public Room saveRoom(Room room) {
-        return roomRepository.save(room);
-    }
+    public List<Room> getAvailableRooms(LocalDate checkIn, LocalDate checkOut) {
+        List<Room> allRooms = roomRepository.findAll();
 
-    public Room updateRoom(Long id, Room roomDetails) {
-        Room room = roomRepository.findById(id).orElse(null);
-        if (room != null) {
-            room.setName(roomDetails.getName());
-            room.setType(roomDetails.getType());
-            room.setStatus(roomDetails.getStatus());
-            return roomRepository.save(room);
-        }
-        return null;
-    }
-
-    public void deleteRoom(Long id) {
-        roomRepository.deleteById(id);
+        return allRooms.stream()
+            .filter(room -> reservationRepository
+                .countByRoom_IdAndCheckInDateLessThanAndCheckOutDateGreaterThan(
+                    room.getId(), checkOut, checkIn) == 0) // Cambiado a `countByRoomIdAndCheckInDateLessThanAndCheckOutDateGreaterThan`
+            .collect(Collectors.toList());
     }
 }
